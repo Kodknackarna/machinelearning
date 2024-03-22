@@ -1,17 +1,13 @@
 from flask import Flask, request, jsonify
 import pickle
 import pandas as pd
-from sklearn import model_selection
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import train_test_split
-
 
 app = Flask(__name__)
 
 model_banana_quality = "finalized_model_BananaQuality.sav"
-loaded_model = pickle.load(open(model_banana_quality, 'rb'))
-rf_model = loaded_model['model']
-model_banana_quality_accuracy = loaded_model['accuracy']
+loaded_banana_model = pickle.load(open(model_banana_quality, 'rb'))
+rf_model = loaded_banana_model['model']
+model_banana_quality_accuracy = loaded_banana_model['accuracy']
 
 model_mobile_price = "finalized_model_mobile_price.sav"
 loaded_mobile_model = pickle.load(open(model_mobile_price, 'rb'))
@@ -50,25 +46,6 @@ def predict_mobile():
 if __name__ == '__main__':
     app.run(debug=True)
 
-''' good banana
-{"Size": 0.02,
-"Weight": 1,
-"Sweetness": 0.5,
-"Softness": 0.03,
-"HarvestTime": -1,
-"Ripeness": 0.1,
-"Acidity": -0.2}
-'''
-
-''' bad banana
-{"Size": 0.02,
-"Weight": 2,
-"Sweetness": -1.6,
-"Softness": -0.8,
-"HarvestTime": 2,
-"Ripeness": -0.5,
-"Acidity": -1}
-'''
 
 '''
 {"battery_power": 1500,
