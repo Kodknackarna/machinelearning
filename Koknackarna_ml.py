@@ -1,8 +1,12 @@
 from flask import Flask, request, jsonify
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import pickle
 import pandas as pd
 
 app = Flask(__name__)
+
+app.config['JWT_SECRET_KEY'] = 'kodknackarna' #vår hemliga nyckel, används för signering och bör vara slumpad textsträng, och egentligen inte hårdkodad
+jwt = JWTManager(app)
 
 model_banana_quality = "finalized_model_BananaQuality.sav"
 loaded_banana_model = pickle.load(open(model_banana_quality, 'rb'))
@@ -15,9 +19,24 @@ svc_model = loaded_mobile_model['model']
 model_mobile_price_accuracy = loaded_mobile_model['accuracy']
 
 
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.json.get('username', None)
+    password = request.json.get('password', None)
+
+    # kontrollerar användarnamn och lösenord är rätt
+    if username != 'yves' or password != '123':
+        return jsonify({"msg": "Bad username or password"}), 401
+
+    # Skapar ett nytt token för användaren
+    access_token = create_access_token(identity=username)
+    return jsonify(access_token=access_token)
 
 @app.route('/PredictBanana', methods=['POST'])
+@jwt_required()
 def predict_banana():
+    current_user = get_jwt_identity()   # identiferar med jwt token
+
     data = request.get_json(force=True) #extraherar json-datan från requesten
 
     prediction_data = pd.DataFrame([data]) #konventerar json-data till pandas dataframe
@@ -31,7 +50,10 @@ def predict_banana():
 
 
 @app.route('/PredictMobile', methods=['POST'])
+@jwt_required()
 def predict_mobile():
+    current_user = get_jwt_identity()  # identiferar med jwt token
+
     data = request.get_json(force=True) #extraherar json-datan från requesten
 
     prediction_data = pd.DataFrame([data]) #konventerar json-data till pandas dataframe
