@@ -67,27 +67,3 @@ def predict_mobile():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-'''
-{"battery_power": 1500,
-"blue": 1,
-"clock_speed": 2.0,
-"dual_sim": 1,
-"fc": 10,
-"four_g": 1,
-"int_memory": 40,
-"m_dep": 0.8,
-"mobile_wt": 175,
-"n_cores": 6,
-"pc": 15,
-"px_heigth": 1200,
-"px_width": 1000,
-"ram": 3000,
-"sc_h": 15,
-"sc_w": 10,
-"talk_time": 18,
-"three_g": 1,
-"touch_screen": 1,
-"wifi": 1}
-'''
